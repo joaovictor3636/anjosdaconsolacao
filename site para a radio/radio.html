@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Player - Anjos da Consolação</title>
+    <style>
+        /* --- ESTILOS CSS DO PLAYER --- */
+        :root {
+            --accent-color: #f4c430; /* Dourado */
+        }
+
+        body {
+            margin: 0; padding: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background: #1a1a1a;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow: hidden; /* Evita barras de rolagem no popup */
+        }
+
+        /* Fundo com imagem */
+        .bg-image {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: url('fundo.jpg') no-repeat center center;
+            background-size: cover;
+            opacity: 0.3; /* Imagem mais escura */
+            z-index: 0;
+        }
+
+        .player-container {
+            z-index: 1;
+            text-align: center;
+            width: 100%;
+            padding-top: 40px;
+            color: white;
+        }
+
+        .status-badge {
+            background-color: #e74c3c;
+            color: white; padding: 5px 15px; border-radius: 50px;
+            font-size: 0.8rem; font-weight: bold; text-transform: uppercase;
+            display: inline-block; margin-bottom: 10px;
+            animation: pulse 2s infinite;
+        }
+
+        .digital-clock {
+            font-size: 2rem; font-weight: 700; color: var(--accent-color);
+            font-family: monospace; margin-bottom: 20px;
+            text-shadow: 0 0 10px rgba(244, 196, 48, 0.4);
+        }
+
+        .cover-art-img {
+            width: 180px; height: 180px; border-radius: 50%;
+            object-fit: cover; margin: 0 auto 20px; display: block;
+            border: 4px solid var(--accent-color);
+            box-shadow: 0 0 25px rgba(244, 196, 48, 0.6);
+            background-color: #000;
+        }
+
+        h2 { margin: 10px 0 5px; font-weight: 300; }
+        p { color: #ccc; font-size: 0.9rem; margin-top: 0; }
+
+        .play-btn {
+            background: var(--accent-color); color: #000; border: none;
+            width: 80px; height: 80px; border-radius: 50%;
+            font-size: 2rem; cursor: pointer; margin: 30px auto;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 0 20px rgba(244, 196, 48, 0.4);
+            transition: transform 0.2s;
+        }
+        .play-btn:hover { transform: scale(1.1); background: #fff; }
+
+        input[type=range] { width: 80%; accent-color: var(--accent-color); cursor: pointer; }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(231, 76, 60, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-image"></div>
+
+    <div class="player-container">
+        <div class="status-badge">Ao Vivo</div>
+        <div class="digital-clock" id="clock">00:00:00</div>
+        
+        <img src="logo.png" alt="Logo" class="cover-art-img">
+
+        <h2>Rádio Web</h2>
+        <p>Anjos da Consolação</p>
+
+        <button id="playBtn" class="play-btn">▶</button>
+        
+        <div style="margin-top:20px;">
+            <input type="range" id="volume" min="0" max="1" step="0.1" value="1">
+        </div>
+        
+        <p id="status-msg" style="font-size: 0.7rem; color: #888; margin-top: 20px;">Aguardando...</p>
+    </div>
+
+    <script>
+        // SEU LINK DO STREAMING
+        const streamUrl = "http://37.157.242.101:15161/;"; 
+
+        const audio = new Audio();
+        const btn = document.getElementById('playBtn');
+        const status = document.getElementById('status-msg');
+        let isPlaying = false;
+
+        // Relógio
+        setInterval(() => {
+            const now = new Date();
+            document.getElementById('clock').innerText = now.toLocaleTimeString();
+        }, 1000);
+
+        function togglePlay() {
+            if (isPlaying) {
+                audio.pause();
+                audio.src = "";
+                btn.innerHTML = "▶";
+                status.innerText = "Pausado";
+            } else {
+                status.innerText = "Conectando...";
+                audio.src = streamUrl + "?t=" + Date.now();
+                audio.play().then(() => {
+                    btn.innerHTML = "❚❚";
+                    status.innerText = "Conectado - No Ar";
+                }).catch(e => {
+                    console.log(e);
+                    status.innerText = "Erro: Clique play novamente";
+                });
+            }
+            isPlaying = !isPlaying;
+        }
+
+        btn.addEventListener('click', togglePlay);
+        document.getElementById('volume').addEventListener('input', (e) => audio.volume = e.target.value);
+    </script>
+</body>
+</html>
