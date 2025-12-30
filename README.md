@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rádio Anjos da Consolação</title>
+    <style>
+        /* --- ESTILOS CSS --- */
+        :root {
+            --primary-color: #004aad; /* Azul */
+            --accent-color: #f4c430; /* Dourado */
+            --text-color: #ffffff;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #1a1a1a;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        header {
+            background-color: rgba(0, 0, 0, 0.8);
+            width: 100%;
+            padding: 20px;
+            text-align: center;
+            border-bottom: 2px solid var(--accent-color);
+        }
+
+        header h1 {
+            margin: 0;
+            color: white;
+            font-weight: 300;
+            letter-spacing: 2px;
+            font-size: 1.5rem;
+        }
+
+        .main-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            padding: 20px;
+        }
+
+        /* --- PLAYER CARD --- */
+        .player-card {
+            width: 100%;
+            max-width: 500px;
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+            color: white;
+            border: 1px solid var(--accent-color);
+            
+            /* Fundo do Estúdio */
+            background: url('fundo.jpg') no-repeat center center;
+            background-size: cover;
+        }
+
+        /* Película escura */
+        .player-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.80); /* Um pouco mais escuro para ler o relógio */
+            z-index: 1;
+        }
+
+        .player-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .status-badge {
+            background-color: #e74c3c;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 15px;
+            box-shadow: 0 0 10px #e74c3c;
+            animation: pulse 2s infinite;
+        }
+
+        /* --- ESTILO DO RELÓGIO --- */
+        .digital-clock {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--accent-color);
+            font-family: 'Courier New', Courier, monospace; /* Fonte estilo digital */
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px rgba(244, 196, 48, 0.4);
+            letter-spacing: 2px;
+        }
+
+        .cover-art-img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0 auto 20px;
+            display: block;
+            border: 4px solid var(--accent-color);
+            box-shadow: 0 0 25px rgba(244, 196, 48, 0.6);
+            background-color: #000;
+        }
+
+        h2 { margin-bottom: 5px; text-shadow: 2px 2px 4px black; }
+        p { color: #ccc; margin-top: 0; text-shadow: 1px 1px 2px black; }
+
+        .play-btn {
+            background: var(--accent-color);
+            color: #000;
+            border: none;
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            font-size: 1.8rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 20px rgba(244, 196, 48, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 20px auto;
+        }
+
+        .play-btn:hover {
+            transform: scale(1.1);
+            background-color: #fff;
+        }
+
+        .volume-control {
+            margin-top: 20px;
+            width: 80%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        input[type=range] {
+            width: 100%;
+            accent-color: var(--accent-color);
+            cursor: pointer;
+        }
+
+        footer {
+            margin-top: auto;
+            padding: 20px;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #888;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(231, 76, 60, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0); }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>ANJOS DA CONSOLAÇÃO</h1>
+    </header>
+
+    <main class="main-container">
+        <div class="player-card">
+            <div class="player-content">
+                <div class="status-badge">Ao Vivo</div>
+                
+                <div class="digital-clock" id="clock">00:00:00</div>
+                
+                <img src="logo.png" alt="Logo Rádio" class="cover-art-img">
+
+                <h2>Rádio Anjos da Consolação</h2>
+                <p>Conectando você com a fé.</p>
+
+                <button id="playPauseBtn" class="play-btn">▶</button>
+                
+                <div class="volume-control">
+                    <label for="volume">Volume</label><br>
+                    <input type="range" id="volume" min="0" max="1" step="0.1" value="1">
+                </div>
+                
+                <p id="status-msg" style="font-size: 0.8rem; color: #bbb; margin-top: 15px;">Aguardando...</p>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        &copy; 2025 Rádio Anjos da Consolação.
+    </footer>
+
+    <script>
+        // --- RELÓGIO EM TEMPO REAL ---
+        function updateClock() {
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            document.getElementById('clock').textContent = `${hours}:${minutes}:${seconds}`;
+        }
+        setInterval(updateClock, 1000); // Atualiza a cada segundo
+        updateClock(); // Chama imediatamente ao carregar
+
+        // --- LÓGICA DO PLAYER ---
+        const streamUrl = "http://78.129.241.110:26876/;"; 
+
+        const audio = new Audio();
+        const playBtn = document.getElementById('playPauseBtn');
+        const volumeSlider = document.getElementById('volume');
+        const statusMsg = document.getElementById('status-msg');
+        let isPlaying = false;
+
+        function togglePlay() {
+            if (isPlaying) {
+                audio.pause();
+                audio.src = ""; 
+                playBtn.innerHTML = "▶";
+                statusMsg.innerText = "Pausado";
+            } else {
+                statusMsg.innerText = "Sintonizando...";
+                audio.src = streamUrl + "?type=.mp3&t=" + Date.now();
+                audio.play()
+                    .then(() => {
+                        playBtn.innerHTML = "❚❚";
+                        statusMsg.innerText = "No Ar - Conexão Estabelecida";
+                    })
+                    .catch(e => {
+                        console.error("Erro:", e);
+                        statusMsg.innerText = "Clique no Play para iniciar";
+                        playBtn.innerHTML = "▶";
+                    });
+            }
+            isPlaying = !isPlaying;
+        }
+
+        playBtn.addEventListener('click', togglePlay);
+
+        volumeSlider.addEventListener('input', (e) => {
+            audio.volume = e.target.value;
+        });
+
+        window.addEventListener('load', () => {
+            statusMsg.innerText = "Carregando transmissão...";
+            audio.src = streamUrl + "?type=.mp3&t=" + Date.now();
+            const playPromise = audio.play();
+
+            if (playPromise !== undefined) {
+                playPromise.then(_ => {
+                    isPlaying = true;
+                    playBtn.innerHTML = "❚❚";
+                    statusMsg.innerText = "No Ar";
+                })
+                .catch(error => {
+                    statusMsg.innerText = "Pronto. Clique no Play.";
+                    isPlaying = false;
+                });
+            }
+        });
+    </script>
+</body>
+</html>
