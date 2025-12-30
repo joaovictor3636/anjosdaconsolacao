@@ -8,7 +8,6 @@
         /* --- ESTILOS GERAIS --- */
         :root {
             --primary: #f4c430; /* Dourado */
-            --dark: #0a0a0a;
             --glass: rgba(20, 20, 20, 0.85);
         }
 
@@ -37,7 +36,8 @@
         /* Cartão Principal (Glassmorphism) */
         .player-card {
             position: relative; z-index: 10;
-            width: 380px;
+            width: 90%;
+            max-width: 380px;
             background: var(--glass);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
@@ -46,6 +46,16 @@
             padding: 40px 30px;
             text-align: center;
             box-shadow: 0 25px 50px rgba(0,0,0,0.6);
+        }
+
+        /* Relógio */
+        .clock {
+            font-family: 'Courier New', monospace;
+            color: var(--primary);
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            font-weight: bold;
+            text-shadow: 0 0 10px rgba(244, 196, 48, 0.5);
         }
 
         /* Logo/Capa */
@@ -93,16 +103,6 @@
         h2 { margin: 10px 0 5px; font-weight: 600; font-size: 1.5rem; letter-spacing: 1px; }
         p.status { color: #888; font-size: 0.85rem; margin-bottom: 30px; text-transform: uppercase; letter-spacing: 2px; }
 
-        /* Relógio */
-        .clock {
-            font-family: 'Courier New', monospace;
-            color: var(--primary);
-            font-size: 1.2rem;
-            margin-bottom: 20px;
-            font-weight: bold;
-            text-shadow: 0 0 10px rgba(244, 196, 48, 0.5);
-        }
-
         /* Botão Play */
         .controls { display: flex; align-items: center; justify-content: center; gap: 20px; }
         
@@ -126,6 +126,11 @@
             width: 60%; height: 4px; border-radius: 2px;
             accent-color: var(--primary); cursor: pointer;
             background: rgba(255,255,255,0.2);
+        }
+
+        /* Rodapé técnico */
+        .tech-info {
+            font-size: 0.6rem; color: #555; margin-top: 15px;
         }
 
         /* Animações Keyframes */
@@ -157,8 +162,8 @@
             <div class="bar"></div><div class="bar"></div>
         </div>
 
-        <h2>Rádio Web</h2>
-        <p class="status" id="statusText">Aguardando Conexão</p>
+        <h2>Rádio Anjos da Consolação</h2>
+        <p class="status" id="statusText">Aguardando Início</p>
 
         <div class="controls">
             <button class="btn-play" id="playBtn">▶</button>
@@ -167,15 +172,14 @@
         <div class="vol-container">
             <input type="range" id="volume" min="0" max="1" step="0.1" value="1">
         </div>
+        
+        <div class="tech-info">Conexão Segura SSL</div>
 
     </div>
 
     <script>
-        /* ATENÇÃO: Cole abaixo o link HTTPS que você pegou no F12 (Network)
-           Geralmente termina em /stream, /listen ou .mp3 
-        */
-        const streamUrl = " https://uk26freenew.listen2myradio.com/live.mp3?typeportmount=ice_23837_stream";
-                          
+        // CONFIGURAÇÃO DO STREAM (Link HTTPS Público)
+        const streamUrl = "https://uk26freenew.listen2myradio.com/live.mp3?typeportmount=ice_23837_stream_188220824"; 
 
         const audio = new Audio();
         const playBtn = document.getElementById('playBtn');
@@ -193,7 +197,7 @@
         function togglePlay() {
             if (isPlaying) {
                 audio.pause();
-                audio.src = ""; // Limpa o buffer
+                audio.src = ""; // Limpa buffer
                 playBtn.innerHTML = "▶";
                 statusText.innerText = "Transmissão Pausada";
                 statusText.style.color = "#888";
@@ -203,24 +207,25 @@
                 pulse.style.animation = "none";
                 
             } else {
-                statusText.innerText = "Conectando Seguro...";
+                statusText.innerText = "Conectando...";
                 statusText.style.color = "#f4c430";
                 
-                // Adiciona timestamp para forçar áudio ao vivo
-                audio.src = streamUrl + (streamUrl.includes('?') ? '&' : '?') + "t=" + Date.now();
+                // Cache busting para garantir áudio ao vivo
+                audio.src = streamUrl + "&t=" + Date.now();
                 
+                // Promise para tratar erros de reprodução
                 audio.play().then(() => {
                     playBtn.innerHTML = "❚❚";
-                    statusText.innerText = "AO VIVO • HTTPS";
-                    statusText.style.color = "#00ff00"; // Verde = Sucesso
+                    statusText.innerText = "NO AR • AO VIVO";
+                    statusText.style.color = "#00ff00"; // Verde
                     
                     // Inicia animações
                     eq.classList.add('playing');
                     pulse.style.animation = "ripple 2s infinite linear";
                 }).catch(error => {
-                    console.error(error);
-                    statusText.innerText = "Erro no Link (Verifique F12)";
-                    statusText.style.color = "red";
+                    console.error("Erro no player:", error);
+                    statusText.innerText = "Clique no Play para iniciar";
+                    statusText.style.color = "#ccc";
                 });
             }
             isPlaying = !isPlaying;
@@ -229,10 +234,15 @@
         playBtn.addEventListener('click', togglePlay);
         document.getElementById('volume').addEventListener('input', (e) => audio.volume = e.target.value);
 
-        // Tenta tocar automático se o navegador deixar
-        window.onload = () => {
-             // Se quiser forçar o play ao carregar:
-             // togglePlay();
+        // Tratamento de queda de conexão
+        audio.onerror = function() {
+            statusText.innerText = "Reconectando...";
+            setTimeout(() => {
+                if(isPlaying) {
+                    audio.src = streamUrl + "&t=" + Date.now();
+                    audio.play();
+                }
+            }, 3000);
         };
     </script>
 </body>
