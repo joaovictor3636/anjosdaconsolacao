@@ -7,22 +7,19 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         :root {
-            /* --- CONFIGURAÇÃO DAS IMAGENS LOCAIS --- */
-            /* O código vai procurar um arquivo chamado 'fundo.jpg' na mesma pasta */
+            /* --- ARQUIVOS LOCAIS --- */
             --bg-image-local: url('fundo.jpg');
             
-            /* Paleta de Cores (Baseada na sua logo) */
-            --gold: #ffd700;         /* Dourado */
-            --dark-red: #4a0000;     /* Vermelho escuro */
-            --orange: #ff8c00;       /* Laranja */
-            --text-light: #fffacd;   /* Creme */
+            /* Paleta de Cores */
+            --gold: #ffd700;
+            --dark-red: #4a0000;
+            --text-light: #fffacd;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
 
         body {
-            /* Carrega a imagem 'fundo.jpg' e aplica uma cor por cima para leitura */
-            background: linear-gradient(135deg, rgba(74, 0, 0, 0.8), rgba(255, 140, 0, 0.7)), var(--bg-image-local);
+            background: linear-gradient(135deg, rgba(74, 0, 0, 0.9), rgba(255, 140, 0, 0.8)), var(--bg-image-local);
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
@@ -34,127 +31,100 @@
             padding: 20px;
         }
 
-        /* --- Cartão do Player --- */
         .player-card {
-            background: rgba(50, 0, 0, 0.85); /* Fundo escuro avermelhado */
+            background: rgba(0, 0, 0, 0.6);
             padding: 40px;
             border-radius: 30px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.7), 0 0 30px rgba(255, 215, 0, 0.3);
+            box-shadow: 0 0 40px rgba(255, 215, 0, 0.2);
             text-align: center;
             max-width: 480px;
             width: 100%;
-            border: 3px solid var(--gold);
-            backdrop-filter: blur(8px); /* Desfoque bonito atrás do cartão */
+            border: 2px solid var(--gold);
+            backdrop-filter: blur(10px);
             color: var(--text-light);
         }
 
-        /* --- Estilo da Logo --- */
         .logo-container {
             width: 200px;
             height: 200px;
             margin: 0 auto 25px auto;
-            position: relative;
         }
 
         .logo-img {
             width: 100%;
             height: 100%;
-            object-fit: cover; /* Ajusta a imagem no círculo */
+            object-fit: cover;
             border-radius: 50%;
             border: 4px solid var(--gold);
             background-color: #000;
-            box-shadow: 0 0 35px rgba(255, 215, 0, 0.6); /* Brilho dourado forte */
+            box-shadow: 0 0 25px var(--gold);
         }
 
-        /* Títulos e Textos */
         h1 {
             color: var(--gold);
-            font-size: 2rem;
+            font-size: 1.8rem;
             text-transform: uppercase;
             font-weight: 800;
-            text-shadow: 2px 2px 4px #000;
             margin-bottom: 5px;
         }
 
-        p.subtitle {
-            font-style: italic;
-            font-size: 1.1rem;
-            margin-bottom: 30px;
-            opacity: 0.9;
-        }
+        p.subtitle { margin-bottom: 25px; font-style: italic; opacity: 0.9; }
 
-        /* --- Badge "Ao Vivo" --- */
-        .live-badge {
-            background: rgba(255, 215, 0, 0.15);
-            border: 1px solid var(--gold);
-            color: var(--gold);
-            padding: 8px 20px;
-            border-radius: 50px;
-            font-weight: bold;
-            display: inline-flex;
-            align-items: center;
-            margin-bottom: 25px;
-            box-shadow: 0 0 15px rgba(255, 215, 0, 0.2);
-        }
-
-        .live-dot {
-            width: 10px; height: 10px;
-            background-color: var(--gold);
-            border-radius: 50%;
-            margin-right: 10px;
-            animation: pulse 1.5s infinite;
-        }
-
-        @keyframes pulse {
-            0% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.4; transform: scale(1.2); }
-            100% { opacity: 1; transform: scale(1); }
-        }
-
-        /* --- Player de Áudio --- */
+        /* --- PLAYER --- */
         audio {
             width: 100%;
-            height: 45px;
+            height: 50px;
             border-radius: 25px;
-            outline: none;
             margin-bottom: 15px;
-            /* Filtro para deixar o player padrão mais "quente/dourado" */
-            filter: sepia(80%) saturate(200%) hue-rotate(10deg) contrast(1.2);
         }
 
-        .status-text {
+        /* --- BOTÃO DE EMERGÊNCIA (SOLUÇÃO DO PROBLEMA) --- */
+        .btn-external {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 10px 20px;
+            background-color: var(--dark-red);
+            color: var(--gold);
+            text-decoration: none;
+            border: 1px solid var(--gold);
+            border-radius: 5px;
             font-size: 0.9rem;
-            color: #ccc;
+            transition: 0.3s;
         }
 
-        /* Rodapé */
-        .footer {
-            margin-top: 30px;
-            font-size: 0.8rem;
-            color: rgba(255, 255, 255, 0.5);
+        .btn-external:hover {
+            background-color: var(--gold);
+            color: var(--dark-red);
         }
+
+        .status-text { font-size: 0.85rem; color: #ccc; margin-top: 10px; }
+        .footer { margin-top: 30px; font-size: 0.75rem; color: rgba(255,255,255,0.4); }
+
     </style>
 </head>
 <body>
 
     <div class="player-card">
         <div class="logo-container">
-            <img src="logo.png" alt="Logo Rádio Anjos da Consolação" class="logo-img" onerror="this.src='logo.jpg'"> 
-            </div>
-
-        <div class="live-badge">
-            <span class="live-dot"></span> NO AR
+            <img src="logo.png" alt="Logo" class="logo-img" onerror="this.src='logo.jpg'">
         </div>
 
         <h1>Anjos da Consolação</h1>
         <p class="subtitle">Projeto de Evangelização</p>
 
-        <audio id="player" controls>
+        <audio id="player" controls preload="none">
             <source src="http://72.62.106.183/listen/r%C3%A1dio_anjos_da_consola%C3%A7%C3%A3o/radio.mp3" type="audio/mpeg">
             Seu navegador não suporta áudio.
         </audio>
 
-        <p id="msg" class="status-text">Toque no play para ouvir a rádio</p>
+        <p id="msg" class="status-text">Clique no Play acima</p>
+
+        <div style="margin-top: 20px; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 15px;">
+            <p style="font-size: 0.8rem; margin-bottom: 10px;">Não está tocando?</p>
+            <a href="http://72.62.106.183/listen/r%C3%A1dio_anjos_da_consola%C3%A7%C3%A3o/radio.mp3" target="_blank" class="btn-external">
+                <i class="fas fa-external-link-alt"></i> Ouvir em Janela Separada
+            </a>
+        </div>
 
         <div class="footer">
             &copy; 2025 Rádio Web Anjos da Consolação
@@ -165,22 +135,21 @@
         const audio = document.getElementById('player');
         const msg = document.getElementById('msg');
 
-        audio.onplay = () => {
-            msg.innerHTML = '<i class="fas fa-volume-up"></i> Conectado e transmitindo...';
-            msg.style.color = 'var(--gold)';
-            msg.style.textShadow = '0 0 5px var(--gold)';
-        };
+        audio.addEventListener('play', () => {
+            msg.innerHTML = "Tentando conectar...";
+            msg.style.color = "yellow";
+        });
 
-        audio.onpause = () => {
-            msg.innerText = 'Transmissão pausada';
-            msg.style.color = '#ccc';
-            msg.style.textShadow = 'none';
-        };
+        audio.addEventListener('playing', () => {
+            msg.innerHTML = "🔴 NO AR - Reproduzindo";
+            msg.style.color = "#00ff00";
+        });
 
-        audio.onerror = () => {
-            msg.innerText = 'Erro ao conectar. Verifique a internet.';
-            msg.style.color = '#ff5555';
-        };
+        audio.addEventListener('error', (e) => {
+            msg.innerHTML = "Bloqueio de segurança detectado. Clique no botão abaixo 👇";
+            msg.style.color = "#ff6b6b";
+            console.log("Erro no áudio: ", e);
+        });
     </script>
 
 </body>
