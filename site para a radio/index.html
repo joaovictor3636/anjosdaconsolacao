@@ -4,247 +4,184 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rádio Anjos da Consolação</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        /* --- ESTILOS GERAIS --- */
         :root {
-            --primary: #f4c430; /* Dourado */
-            --glass: rgba(20, 20, 20, 0.85);
+            /* --- CONFIGURAÇÃO DAS IMAGENS LOCAIS --- */
+            /* O código vai procurar um arquivo chamado 'fundo.jpg' na mesma pasta */
+            --bg-image-local: url('fundo.jpg');
+            
+            /* Paleta de Cores (Baseada na sua logo) */
+            --gold: #ffd700;         /* Dourado */
+            --dark-red: #4a0000;     /* Vermelho escuro */
+            --orange: #ff8c00;       /* Laranja */
+            --text-light: #fffacd;   /* Creme */
         }
 
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+
         body {
-            margin: 0; padding: 0;
-            font-family: 'Segoe UI', sans-serif;
-            background: #000;
-            height: 100vh;
+            /* Carrega a imagem 'fundo.jpg' e aplica uma cor por cima para leitura */
+            background: linear-gradient(135deg, rgba(74, 0, 0, 0.8), rgba(255, 140, 0, 0.7)), var(--bg-image-local);
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            overflow: hidden;
-            color: white;
+            flex-direction: column;
+            padding: 20px;
         }
 
-        /* Fundo Imersivo */
-        .bg-layer {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: url('fundo.jpg') no-repeat center center;
-            background-size: cover;
-            filter: blur(8px) brightness(0.4);
-            transform: scale(1.1);
-            z-index: 0;
-        }
-
-        /* Cartão Principal (Glassmorphism) */
+        /* --- Cartão do Player --- */
         .player-card {
-            position: relative; z-index: 10;
-            width: 90%;
-            max-width: 380px;
-            background: var(--glass);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(50, 0, 0, 0.85); /* Fundo escuro avermelhado */
+            padding: 40px;
             border-radius: 30px;
-            padding: 40px 30px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.7), 0 0 30px rgba(255, 215, 0, 0.3);
             text-align: center;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.6);
+            max-width: 480px;
+            width: 100%;
+            border: 3px solid var(--gold);
+            backdrop-filter: blur(8px); /* Desfoque bonito atrás do cartão */
+            color: var(--text-light);
         }
 
-        /* Relógio */
-        .clock {
-            font-family: 'Courier New', monospace;
-            color: var(--primary);
-            font-size: 1.2rem;
-            margin-bottom: 20px;
-            font-weight: bold;
-            text-shadow: 0 0 10px rgba(244, 196, 48, 0.5);
-        }
-
-        /* Logo/Capa */
-        .cover-wrapper {
+        /* --- Estilo da Logo --- */
+        .logo-container {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 25px auto;
             position: relative;
-            width: 160px; height: 160px;
-            margin: 0 auto 25px;
         }
-        
-        .cover-art {
-            width: 100%; height: 100%;
+
+        .logo-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Ajusta a imagem no círculo */
             border-radius: 50%;
-            object-fit: cover;
-            border: 4px solid var(--primary);
-            box-shadow: 0 0 30px rgba(244, 196, 48, 0.2);
-            position: relative; z-index: 2;
-            background: #000;
+            border: 4px solid var(--gold);
+            background-color: #000;
+            box-shadow: 0 0 35px rgba(255, 215, 0, 0.6); /* Brilho dourado forte */
         }
 
-        /* Animação de "Onda" atrás da logo */
-        .pulse-ring {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+        /* Títulos e Textos */
+        h1 {
+            color: var(--gold);
+            font-size: 2rem;
+            text-transform: uppercase;
+            font-weight: 800;
+            text-shadow: 2px 2px 4px #000;
+            margin-bottom: 5px;
+        }
+
+        p.subtitle {
+            font-style: italic;
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+
+        /* --- Badge "Ao Vivo" --- */
+        .live-badge {
+            background: rgba(255, 215, 0, 0.15);
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-weight: bold;
+            display: inline-flex;
+            align-items: center;
+            margin-bottom: 25px;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.2);
+        }
+
+        .live-dot {
+            width: 10px; height: 10px;
+            background-color: var(--gold);
             border-radius: 50%;
-            border: 2px solid var(--primary);
-            animation: ripple 2s infinite linear;
-            z-index: 1; opacity: 0;
+            margin-right: 10px;
+            animation: pulse 1.5s infinite;
         }
 
-        /* Equalizador Falso (Visual) */
-        .equalizer {
-            display: flex; justify-content: center; align-items: flex-end;
-            height: 20px; gap: 4px; margin-bottom: 20px;
-        }
-        .bar { width: 4px; background: var(--primary); border-radius: 2px; animation: none; height: 3px;}
-        
-        /* Classe ativada via JS quando toca */
-        .playing .bar { animation: bounce 1s infinite ease-in-out; }
-        .playing .bar:nth-child(1) { animation-duration: 0.8s; }
-        .playing .bar:nth-child(2) { animation-duration: 1.1s; }
-        .playing .bar:nth-child(3) { animation-duration: 1.3s; }
-        .playing .bar:nth-child(4) { animation-duration: 0.9s; }
-        .playing .bar:nth-child(5) { animation-duration: 1.2s; }
-
-        /* Textos */
-        h2 { margin: 10px 0 5px; font-weight: 600; font-size: 1.5rem; letter-spacing: 1px; }
-        p.status { color: #888; font-size: 0.85rem; margin-bottom: 30px; text-transform: uppercase; letter-spacing: 2px; }
-
-        /* Botão Play */
-        .controls { display: flex; align-items: center; justify-content: center; gap: 20px; }
-        
-        .btn-play {
-            width: 70px; height: 70px;
-            border-radius: 50%;
-            background: var(--primary);
-            border: none;
-            color: #000;
-            font-size: 1.8rem;
-            cursor: pointer;
-            display: flex; align-items: center; justify-content: center;
-            transition: all 0.3s;
-            box-shadow: 0 0 20px rgba(244, 196, 48, 0.4);
-        }
-        .btn-play:hover { transform: scale(1.1); background: #fff; }
-
-        /* Volume */
-        .vol-container { width: 100%; display: flex; justify-content: center; margin-top: 30px; }
-        input[type=range] {
-            width: 60%; height: 4px; border-radius: 2px;
-            accent-color: var(--primary); cursor: pointer;
-            background: rgba(255,255,255,0.2);
+        @keyframes pulse {
+            0% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(1.2); }
+            100% { opacity: 1; transform: scale(1); }
         }
 
-        /* Rodapé técnico */
-        .tech-info {
-            font-size: 0.6rem; color: #555; margin-top: 15px;
+        /* --- Player de Áudio --- */
+        audio {
+            width: 100%;
+            height: 45px;
+            border-radius: 25px;
+            outline: none;
+            margin-bottom: 15px;
+            /* Filtro para deixar o player padrão mais "quente/dourado" */
+            filter: sepia(80%) saturate(200%) hue-rotate(10deg) contrast(1.2);
         }
 
-        /* Animações Keyframes */
-        @keyframes ripple {
-            0% { transform: scale(1); opacity: 0.8; }
-            100% { transform: scale(1.5); opacity: 0; }
+        .status-text {
+            font-size: 0.9rem;
+            color: #ccc;
         }
-        @keyframes bounce {
-            0%, 100% { height: 3px; }
-            50% { height: 20px; }
+
+        /* Rodapé */
+        .footer {
+            margin-top: 30px;
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.5);
         }
     </style>
 </head>
 <body>
 
-    <div class="bg-layer"></div>
-
     <div class="player-card">
-        
-        <div class="clock" id="clock">00:00:00</div>
-        
-        <div class="cover-wrapper">
-            <div class="pulse-ring" id="pulseRing"></div>
-            <img src="logo.png" alt="Logo" class="cover-art">
+        <div class="logo-container">
+            <img src="logo.png" alt="Logo Rádio Anjos da Consolação" class="logo-img" onerror="this.src='logo.jpg'"> 
+            </div>
+
+        <div class="live-badge">
+            <span class="live-dot"></span> NO AR
         </div>
 
-        <div class="equalizer" id="eq">
-            <div class="bar"></div><div class="bar"></div><div class="bar"></div>
-            <div class="bar"></div><div class="bar"></div>
+        <h1>Anjos da Consolação</h1>
+        <p class="subtitle">Projeto de Evangelização</p>
+
+        <audio id="player" controls>
+            <source src="http://72.62.106.183/listen/r%C3%A1dio_anjos_da_consola%C3%A7%C3%A3o/radio.mp3" type="audio/mpeg">
+            Seu navegador não suporta áudio.
+        </audio>
+
+        <p id="msg" class="status-text">Toque no play para ouvir a rádio</p>
+
+        <div class="footer">
+            &copy; 2025 Rádio Web Anjos da Consolação
         </div>
-
-        <h2>Rádio Anjos da Consolação</h2>
-        <p class="status" id="statusText">Aguardando Início</p>
-
-        <div class="controls">
-            <button class="btn-play" id="playBtn">▶</button>
-        </div>
-
-        <div class="vol-container">
-            <input type="range" id="volume" min="0" max="1" step="0.1" value="1">
-        </div>
-        
-        <div class="tech-info">Conexão Segura SSL</div>
-
     </div>
 
     <script>
-        // CONFIGURAÇÃO DO STREAM (Link HTTPS Público)
-        
-		const streamUrl = "https://uk16freenew.listen2myradio.com/live.mp3?typeportmount=ice_18014_stream_828430582"; 
+        const audio = document.getElementById('player');
+        const msg = document.getElementById('msg');
 
-        const audio = new Audio();
-        const playBtn = document.getElementById('playBtn');
-        const statusText = document.getElementById('statusText');
-        const eq = document.getElementById('eq');
-        const pulse = document.getElementById('pulseRing');
-        let isPlaying = false;
+        audio.onplay = () => {
+            msg.innerHTML = '<i class="fas fa-volume-up"></i> Conectado e transmitindo...';
+            msg.style.color = 'var(--gold)';
+            msg.style.textShadow = '0 0 5px var(--gold)';
+        };
 
-        // Relógio
-        setInterval(() => {
-            const now = new Date();
-            document.getElementById('clock').innerText = now.toLocaleTimeString();
-        }, 1000);
+        audio.onpause = () => {
+            msg.innerText = 'Transmissão pausada';
+            msg.style.color = '#ccc';
+            msg.style.textShadow = 'none';
+        };
 
-        function togglePlay() {
-            if (isPlaying) {
-                audio.pause();
-                audio.src = ""; // Limpa buffer
-                playBtn.innerHTML = "▶";
-                statusText.innerText = "Transmissão Pausada";
-                statusText.style.color = "#888";
-                
-                // Para animações
-                eq.classList.remove('playing');
-                pulse.style.animation = "none";
-                
-            } else {
-                statusText.innerText = "Conectando...";
-                statusText.style.color = "#f4c430";
-                
-                // Cache busting para garantir áudio ao vivo
-                audio.src = streamUrl + "&t=" + Date.now();
-                
-                // Promise para tratar erros de reprodução
-                audio.play().then(() => {
-                    playBtn.innerHTML = "❚❚";
-                    statusText.innerText = "NO AR • AO VIVO";
-                    statusText.style.color = "#00ff00"; // Verde
-                    
-                    // Inicia animações
-                    eq.classList.add('playing');
-                    pulse.style.animation = "ripple 2s infinite linear";
-                }).catch(error => {
-                    console.error("Erro no player:", error);
-                    statusText.innerText = "Clique no Play para iniciar";
-                    statusText.style.color = "#ccc";
-                });
-            }
-            isPlaying = !isPlaying;
-        }
-
-        playBtn.addEventListener('click', togglePlay);
-        document.getElementById('volume').addEventListener('input', (e) => audio.volume = e.target.value);
-
-        // Tratamento de queda de conexão
-        audio.onerror = function() {
-            statusText.innerText = "Reconectando...";
-            setTimeout(() => {
-                if(isPlaying) {
-                    audio.src = streamUrl + "&t=" + Date.now();
-                    audio.play();
-                }
-            }, 3000);
+        audio.onerror = () => {
+            msg.innerText = 'Erro ao conectar. Verifique a internet.';
+            msg.style.color = '#ff5555';
         };
     </script>
+
 </body>
 </html>
