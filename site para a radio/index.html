@@ -7,10 +7,10 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         :root {
-            /* --- ARQUIVOS LOCAIS --- */
+            /* Imagens Locais */
             --bg-image-local: url('fundo.jpg');
             
-            /* Paleta de Cores */
+            /* Cores */
             --gold: #ffd700;
             --dark-red: #4a0000;
             --text-light: #fffacd;
@@ -19,7 +19,7 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
 
         body {
-            background: linear-gradient(135deg, rgba(74, 0, 0, 0.9), rgba(255, 140, 0, 0.8)), var(--bg-image-local);
+            background: linear-gradient(135deg, rgba(50, 0, 0, 0.9), rgba(200, 100, 0, 0.8)), var(--bg-image-local);
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
@@ -32,22 +32,23 @@
         }
 
         .player-card {
-            background: rgba(0, 0, 0, 0.6);
-            padding: 40px;
+            background: rgba(20, 0, 0, 0.7);
+            padding: 30px;
             border-radius: 30px;
-            box-shadow: 0 0 40px rgba(255, 215, 0, 0.2);
+            box-shadow: 0 0 50px rgba(255, 215, 0, 0.15);
             text-align: center;
             max-width: 480px;
             width: 100%;
             border: 2px solid var(--gold);
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(12px);
             color: var(--text-light);
+            position: relative;
         }
 
         .logo-container {
-            width: 200px;
-            height: 200px;
-            margin: 0 auto 25px auto;
+            width: 180px;
+            height: 180px;
+            margin: 0 auto 20px auto;
         }
 
         .logo-img {
@@ -57,7 +58,7 @@
             border-radius: 50%;
             border: 4px solid var(--gold);
             background-color: #000;
-            box-shadow: 0 0 25px var(--gold);
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
         }
 
         h1 {
@@ -66,39 +67,78 @@
             text-transform: uppercase;
             font-weight: 800;
             margin-bottom: 5px;
+            text-shadow: 2px 2px 4px black;
         }
 
         p.subtitle { margin-bottom: 25px; font-style: italic; opacity: 0.9; }
 
-        /* --- PLAYER --- */
-        audio {
-            width: 100%;
-            height: 50px;
-            border-radius: 25px;
-            margin-bottom: 15px;
-        }
-
-        /* --- BOTÃO DE EMERGÊNCIA (SOLUÇÃO DO PROBLEMA) --- */
-        .btn-external {
-            display: inline-block;
-            margin-top: 15px;
-            padding: 10px 20px;
-            background-color: var(--dark-red);
-            color: var(--gold);
-            text-decoration: none;
-            border: 1px solid var(--gold);
-            border-radius: 5px;
-            font-size: 0.9rem;
-            transition: 0.3s;
-        }
-
-        .btn-external:hover {
-            background-color: var(--gold);
+        /* --- BOTÃO DE PLAY PERSONALIZADO --- */
+        .custom-play-btn {
+            background: var(--gold);
             color: var(--dark-red);
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: none;
+            font-size: 2rem;
+            cursor: pointer;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px auto;
         }
 
-        .status-text { font-size: 0.85rem; color: #ccc; margin-top: 10px; }
-        .footer { margin-top: 30px; font-size: 0.75rem; color: rgba(255,255,255,0.4); }
+        .custom-play-btn:hover {
+            transform: scale(1.1);
+            background: #fff;
+        }
+
+        .custom-play-btn.playing {
+            background: #ff4444; /* Vira botão de parar */
+            color: white;
+            animation: pulse-red 2s infinite;
+        }
+
+        @keyframes pulse-red {
+            0% { box-shadow: 0 0 0 0 rgba(255, 68, 68, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(255, 68, 68, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 68, 68, 0); }
+        }
+
+        /* Esconder o player nativo feio */
+        audio { display: none; }
+
+        #status-msg {
+            font-weight: bold;
+            margin-top: 10px;
+            min-height: 20px;
+            font-size: 0.9rem;
+        }
+
+        .equalizer {
+            height: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            gap: 5px;
+            margin-bottom: 20px;
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+        .bar { width: 6px; background: var(--gold); animation: eq 1s infinite ease-in-out; }
+        .bar:nth-child(2) { animation-delay: 0.1s; height: 15px; }
+        .bar:nth-child(3) { animation-delay: 0.2s; height: 25px; }
+        .bar:nth-child(4) { animation-delay: 0.3s; height: 10px; }
+        .bar:nth-child(5) { animation-delay: 0.4s; height: 20px; }
+
+        @keyframes eq {
+            0%, 100% { height: 10px; }
+            50% { height: 25px; }
+        }
+
+        .show-eq { opacity: 1; }
 
     </style>
 </head>
@@ -112,44 +152,83 @@
         <h1>Anjos da Consolação</h1>
         <p class="subtitle">Projeto de Evangelização</p>
 
-        <audio id="player" controls preload="none">
-            <source src="http://72.62.106.183/listen/r%C3%A1dio_anjos_da_consola%C3%A7%C3%A3o/radio.mp3" type="audio/mpeg">
-            Seu navegador não suporta áudio.
-        </audio>
-
-        <p id="msg" class="status-text">Clique no Play acima</p>
-
-        <div style="margin-top: 20px; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 15px;">
-            <p style="font-size: 0.8rem; margin-bottom: 10px;">Não está tocando?</p>
-            <a href="http://72.62.106.183/listen/r%C3%A1dio_anjos_da_consola%C3%A7%C3%A3o/radio.mp3" target="_blank" class="btn-external">
-                <i class="fas fa-external-link-alt"></i> Ouvir em Janela Separada
-            </a>
+        <div class="equalizer" id="equalizer">
+            <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
         </div>
 
-        <div class="footer">
+        <button id="playBtn" class="custom-play-btn">
+            <i class="fas fa-play"></i>
+        </button>
+
+        <p id="status-msg" style="color: var(--gold);">Toque no botão para iniciar</p>
+
+        <audio id="audioPlayer" preload="none">
+            <source src="http://72.62.106.183/listen/r%C3%A1dio_anjos_da_consola%C3%A7%C3%A3o/radio.mp3?nocache=123" type="audio/mpeg">
+        </audio>
+
+        <div style="margin-top: 30px; font-size: 0.7rem; color: #888;">
             &copy; 2025 Rádio Web Anjos da Consolação
         </div>
     </div>
 
     <script>
-        const audio = document.getElementById('player');
-        const msg = document.getElementById('msg');
+        const audio = document.getElementById('audioPlayer');
+        const playBtn = document.getElementById('playBtn');
+        const icon = playBtn.querySelector('i');
+        const statusMsg = document.getElementById('status-msg');
+        const equalizer = document.getElementById('equalizer');
 
-        audio.addEventListener('play', () => {
-            msg.innerHTML = "Tentando conectar...";
-            msg.style.color = "yellow";
+        let isPlaying = false;
+
+        playBtn.addEventListener('click', () => {
+            if (!isPlaying) {
+                startRadio();
+            } else {
+                stopRadio();
+            }
         });
 
-        audio.addEventListener('playing', () => {
-            msg.innerHTML = "🔴 NO AR - Reproduzindo";
-            msg.style.color = "#00ff00";
-        });
+        function startRadio() {
+            statusMsg.innerText = "Conectando ao servidor...";
+            statusMsg.style.color = "yellow";
+            
+            // Tenta dar play
+            audio.load(); // Recarrega o stream para garantir que está ao vivo
+            const playPromise = audio.play();
 
-        audio.addEventListener('error', (e) => {
-            msg.innerHTML = "Bloqueio de segurança detectado. Clique no botão abaixo 👇";
-            msg.style.color = "#ff6b6b";
-            console.log("Erro no áudio: ", e);
-        });
+            if (playPromise !== undefined) {
+                playPromise.then(_ => {
+                    // Começou a tocar
+                    isPlaying = true;
+                    icon.classList.remove('fa-play');
+                    icon.classList.add('fa-stop');
+                    playBtn.classList.add('playing');
+                    equalizer.classList.add('show-eq');
+                    statusMsg.innerText = "NO AR - AO VIVO";
+                    statusMsg.style.color = "#00ff00";
+                })
+                .catch(error => {
+                    // Deu erro (provavelmente bloqueio de segurança)
+                    console.error("Erro:", error);
+                    isPlaying = false;
+                    statusMsg.innerText = "⚠️ Erro: Seu navegador bloqueou a rádio (HTTP).";
+                    statusMsg.style.color = "red";
+                    alert("Atenção: Seu navegador bloqueou o som porque a rádio não tem 'HTTPS'. Verifique se há um cadeado ou escudo na barra de endereço e permita o áudio.");
+                });
+            }
+        }
+
+        function stopRadio() {
+            audio.pause();
+            audio.currentTime = 0; // Reseta o buffer
+            isPlaying = false;
+            icon.classList.remove('fa-stop');
+            icon.classList.add('fa-play');
+            playBtn.classList.remove('playing');
+            equalizer.classList.remove('show-eq');
+            statusMsg.innerText = "Rádio Pausada";
+            statusMsg.style.color = "var(--text-light)";
+        }
     </script>
 
 </body>
